@@ -36,8 +36,27 @@ Il PNE deve essere usato come fonte di indicatori comparativi. Il repository non
 
 ## Uso
 
+Installare le dipendenze.
+
 ```bash
 pip install -r requirements.txt
+```
+
+Per analisi geografiche:
+
+```bash
+pip install -r requirements-geo.txt
+```
+
+Eseguire tutta la pipeline.
+
+```bash
+python src/18_full_pipeline.py
+```
+
+Oppure eseguire i passaggi singoli.
+
+```bash
 python src/15_build_catalogs.py
 python src/00_discover_sources.py
 python src/01_download_ministero_salute.py
@@ -48,12 +67,7 @@ python src/05_build_indicators.py
 python src/06_export_json.py
 python src/07_build_charts.py
 python src/16_data_requirements.py
-```
-
-Per analisi geografiche:
-
-```bash
-pip install -r requirements-geo.txt
+python src/17_module_inventory.py
 ```
 
 ## Output
