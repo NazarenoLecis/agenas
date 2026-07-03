@@ -11,6 +11,8 @@ import sys
 STEPS = [
     "src/15_build_catalogs.py",
     "src/00_discover_sources.py",
+    "src/33_validate_discovered_links.py",
+    "src/34_dataset_registry.py",
     "src/24_discover_ministero_salute_catalog.py",
     "src/01_download_ministero_salute.py",
     "src/02_download_Agenas.py",
