@@ -1,9 +1,7 @@
 """
 Script: 20_run_all.py
 
-Obiettivo
-Eseguire tutti gli script principali della pipeline, inclusi cataloghi,
-discovery, download, normalizzazione, output e inventari.
+Esegue la pipeline principale del progetto.
 """
 
 import subprocess
@@ -13,6 +11,7 @@ import sys
 STEPS = [
     "src/15_build_catalogs.py",
     "src/00_discover_sources.py",
+    "src/24_discover_ministero_salute_catalog.py",
     "src/01_download_ministero_salute.py",
     "src/02_download_Agenas.py",
     "src/03_normalize_ministero_salute.py",
@@ -23,6 +22,10 @@ STEPS = [
     "src/16_data_requirements.py",
     "src/17_module_inventory.py",
     "src/19_data_source_notes.py",
+    "src/22_quality_overview_v2.py",
+    "src/23_source_audit.py",
+    "src/25_build_duckdb.py",
+    "src/31_build_dimensions.py",
 ]
 
 
