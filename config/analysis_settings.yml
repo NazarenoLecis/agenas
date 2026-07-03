@@ -1,0 +1,18 @@
+analysis:
+  default_year: null
+  min_cell_count: 5
+  export_csv: true
+  export_json: true
+  export_parquet: true
+  overwrite_existing_files: false
+
+charts:
+  figure_width: 12
+  figure_height: 7
+  dpi: 150
+  default_top_n: 20
+
+quality_checks:
+  fail_on_missing_required_columns: false
+  fail_on_empty_dataset: true
+  write_quality_reports: true
