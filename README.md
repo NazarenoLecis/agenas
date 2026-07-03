@@ -2,17 +2,17 @@
 
 Repository per catalogare, scaricare, normalizzare e analizzare dati pubblici del Servizio sanitario nazionale da fonti istituzionali.
 
-Il progetto parte da Agenas e integra Ministero della Salute, ISTAT, OpenBDAP, AIFA e fonti regionali ufficiali.
+Il progetto integra Agenas, Ministero della Salute, ISTAT, OpenBDAP, AIFA e fonti regionali ufficiali.
 
 ## Obiettivo
 
-Costruire una base dati riproducibile per ottenere e analizzare tutto cio che e disponibile dalle fonti pubbliche sanitarie, con dettaglio nazionale, regionale, aziendale, territoriale, di struttura, di prestazione e di periodo quando la fonte lo consente.
+Creare una base dati riproducibile per analisi sanitarie nazionali, regionali, aziendali, territoriali, di struttura, di prestazione e di periodo quando la fonte lo consente.
 
-Il repository non parte da una singola analisi prioritaria. L'obiettivo e costruire un'infrastruttura dati ampia, estendibile e documentata.
+Il repository serve a individuare le fonti disponibili, verificarne licenza e granularita, scaricare i dati quando esistono link diretti, normalizzare i dataset e produrre tabelle, JSON, grafici e notebook di analisi.
 
 ## Ambiti coperti
 
-Il progetto deve mappare tutte le fonti disponibili su mobilita sanitaria, personale, tempi di attesa, costi, spesa, prestazioni, emergenza, ricoveri, attivita ospedaliera, assistenza territoriale, dotazioni, strutture, accreditamento, farmaci, demografia e indicatori di esito.
+Il progetto mappa dati su mobilita sanitaria, personale, tempi di attesa, costi, spesa, prestazioni, emergenza, ricoveri, attivita ospedaliera, assistenza territoriale, dotazioni, strutture, accreditamento, farmaci, demografia e indicatori di esito.
 
 ## Metodologia
 
