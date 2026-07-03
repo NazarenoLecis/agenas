@@ -2,17 +2,19 @@
 
 Repository per catalogare, scaricare, normalizzare e analizzare dati pubblici del Servizio sanitario nazionale da fonti istituzionali.
 
-Il progetto parte da Agenas e integra Ministero della Salute, ISTAT e fonti regionali ufficiali.
+Il progetto parte da Agenas e integra Ministero della Salute, ISTAT, OpenBDAP, AIFA e fonti regionali ufficiali.
 
 ## Obiettivo
 
-Costruire una base dati riproducibile per analisi nazionali, regionali e territoriali su capacita ospedaliera, strutture, posti letto, grandi apparecchiature, mobilita sanitaria, liste di attesa, indicatori PNE, assistenza territoriale e accessibilita ai servizi.
+Costruire una base dati riproducibile per ottenere e analizzare tutto cio che e disponibile dalle fonti pubbliche sanitarie, con dettaglio nazionale, regionale, aziendale, territoriale, di struttura, di prestazione e di periodo quando la fonte lo consente.
 
-## Moduli prioritari
+Il repository non parte da una singola analisi prioritaria. L'obiettivo e costruire un'infrastruttura dati ampia, estendibile e documentata, capace di coprire tutte le dimensioni disponibili.
 
-La parte centrale del progetto e la mobilita sanitaria. Serve capire da dove partono i pazienti, dove vanno, per quali prestazioni, con quale valore economico e con quale livello di complessita. La mobilita va distinta tra prestazioni di prossimita, bassa complessita e alta specializzazione.
+## Ambiti coperti
 
-Gli altri moduli prioritari sono personale sanitario, tempi di attesa, costi, prestazioni, emergenza, ricoveri e attivita ospedaliera.
+Il progetto deve mappare tutte le fonti disponibili su mobilita sanitaria, personale, tempi di attesa, costi, spesa, prestazioni, emergenza, ricoveri, attivita ospedaliera, assistenza territoriale, dotazioni, strutture, accreditamento, farmaci, demografia e indicatori di esito.
+
+Per la mobilita sanitaria servono origine, destinazione, prestazione, valore economico, volumi e livello di complessita. La mobilita puo essere distinta tra prestazioni di prossimita, bassa complessita, alta specializzazione e mobilita di confine quando i dati permettono questa classificazione.
 
 Per il personale servono distribuzioni di medici per categoria o disciplina, infermieri, operatori socio sanitari e altre professioni. Per le prestazioni servono numero, tipo, territorio, struttura e periodo. Per emergenza servono accessi, triage, tempi, esiti e ricoveri successivi.
 
