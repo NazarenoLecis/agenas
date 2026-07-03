@@ -1,5 +1,12 @@
-source_id,provider,dataset_name,theme,sub_theme,source_page_url,download_url_csv,download_url_json,download_url_xml,format_available,access_type,license,redistribution_allowed,territorial_level,healthcare_level,time_coverage_start,time_coverage_end,frequency,last_checked,download_status,notes
-Agenas_portale_statistico,Agenas,Portale Statistico Agenas,portale_statistico,,https://stat.agenas.it/web/index.php?r=site%2Fpublic,,,,dashboard,dashboard,da_verificare,unclear,nazionale_regionale_aziendale,multiplo,,,variabile,,manual_review,Cruscotti e report da verificare fonte per fonte
-Agenas_pne,Agenas,Programma Nazionale Esiti,pne,,https://www.agenas.gov.it/ricerca-e-sviluppo/758-che-cosa-e-pne,,,,manual_review,manual_review,da_verificare,unclear,struttura_asl_regione,ospedaliero,,,annuale,,manual_review,Usare come indicatori comparativi
-Agenas_pnla,Agenas,Piattaforma Nazionale Liste di Attesa,liste_attesa,,https://www.portaletrasparenzaservizisanitari.it/piattaforma-nazionale-delle-liste-di-attesa/,,,,dashboard,dashboard,da_verificare,unclear,regione_prestazione,ambulatoriale,,,variabile,,manual_review,Verificare download ufficiali
-ministero_salute_open_data,Ministero della Salute,Open Data Ministero della Salute,open_data,,https://www.dati.salute.gov.it/,,,,csv_json_xml,web_page,IODL,yes,nazionale_regionale_struttura,multiplo,,,variabile,,pending,Fonte prioritaria per dataset scaricabili
+source_id,provider,dataset_name,theme,source_page_url,access_type,license,redistribution_allowed,download_status,notes
+Agenas_portale_statistico,Agenas,Portale Statistico Agenas,portale_statistico,https://stat.agenas.it/web/index.php?r=site%2Fpublic,dashboard,da_verificare,unclear,manual_review,Cruscotti e report da verificare
+Agenas_mobilita,Agenas,Mobilita sanitaria,mobility,https://stat.agenas.it/web/index.php?r=site%2Fpublic,dashboard,da_verificare,unclear,manual_review,Flussi origine destinazione e prestazioni
+Agenas_mobilita_economica,Agenas,Risultati economici mobilita,costs,https://stat.agenas.it/web/index.php?r=site%2Fpublic,dashboard,da_verificare,unclear,manual_review,Valore economico dei flussi
+Agenas_specialistica,Agenas,Specialistica ambulatoriale,services,https://stat.agenas.it/web/index.php?r=site%2Fpublic,dashboard,da_verificare,unclear,manual_review,Prestazioni ambulatoriali
+Agenas_pne,Agenas,Programma Nazionale Esiti,hospital_activity,https://www.agenas.gov.it/ricerca-e-sviluppo/758-che-cosa-e-pne,manual_review,da_verificare,unclear,manual_review,Indicatori e volumi
+Agenas_pnla,Agenas,Liste di attesa,waiting_times,https://www.portaletrasparenzaservizisanitari.it/piattaforma-nazionale-delle-liste-di-attesa/,dashboard,da_verificare,unclear,manual_review,Tempi e priorita
+Agenas_personale,Agenas,Fabbisogno personale,workforce,https://www.agenas.gov.it/ricerca-e-sviluppo/758-che-cosa-e-pne,manual_review,da_verificare,unclear,manual_review,Personale sanitario
+ministero_salute_open_data,Ministero della Salute,Open Data Ministero Salute,open_data,https://www.dati.salute.gov.it/,web_page,IODL,yes,pending,Fonte prioritaria
+ministero_salute_personale,Ministero della Salute,Personale SSN,workforce,https://www.dati.salute.gov.it/,web_page,IODL,yes,manual_review,Professioni sanitarie
+ministero_salute_sdo,Ministero della Salute,Ricoveri SDO,hospital_activity,https://www.dati.salute.gov.it/,web_page,IODL,yes,manual_review,Ricoveri e dimissioni
+ministero_salute_emergenza,Ministero della Salute,Emergenza,emergency,https://www.dati.salute.gov.it/,manual_review,da_verificare,unclear,manual_review,Accessi e triage
