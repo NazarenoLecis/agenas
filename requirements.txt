@@ -14,3 +14,7 @@ jupyter
 notebook
 rapidfuzz
 statsmodels
+geopandas
+shapely
+pyogrio
+folium
