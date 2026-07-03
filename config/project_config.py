@@ -17,27 +17,9 @@ PATHS = {
     "outputs_dashboard": "outputs/dashboard_data",
 }
 
-ANALYSIS_SETTINGS = {
-    "default_year": None,
-    "min_cell_count": 5,
-    "export_csv": True,
-    "export_json": True,
-    "export_parquet": True,
-    "overwrite_existing_files": False,
-}
-
-CHART_SETTINGS = {
-    "figure_width": 12,
-    "figure_height": 7,
-    "dpi": 150,
-    "default_top_n": 20,
-}
-
-QUALITY_SETTINGS = {
-    "fail_on_missing_required_columns": False,
-    "fail_on_empty_dataset": True,
-    "write_quality_reports": True,
-}
+ANALYSIS_SETTINGS = {"default_year": None, "min_cell_count": 5, "export_csv": True, "export_json": True, "export_parquet": True, "overwrite_existing_files": False}
+CHART_SETTINGS = {"figure_width": 12, "figure_height": 7, "dpi": 150, "default_top_n": 20}
+QUALITY_SETTINGS = {"fail_on_missing_required_columns": False, "fail_on_empty_dataset": True, "write_quality_reports": True}
 
 ANALYSIS_MODULES = [
     {"module_id": "mobility_flows", "module_name": "Mobilita sanitaria", "coverage": "all_available_data", "expected_granularity": "origine_destinazione_prestazione_disciplina_anno_valore_volume"},
@@ -53,6 +35,8 @@ ANALYSIS_MODULES = [
     {"module_id": "structures", "module_name": "Strutture sanitarie", "coverage": "all_available_data", "expected_granularity": "regione_asl_struttura_tipo_accreditamento_anno"},
     {"module_id": "pharmaceutical", "module_name": "Farmaci e assistenza farmaceutica", "coverage": "all_available_data", "expected_granularity": "regione_farmaco_classe_spesa_consumo_anno"},
     {"module_id": "demography", "module_name": "Demografia e denominatori", "coverage": "all_available_data", "expected_granularity": "comune_regione_eta_sesso_anno"},
+    {"module_id": "surveillance", "module_name": "Sorveglianze ISS", "coverage": "all_available_data", "expected_granularity": "regione_eta_sesso_periodo_indicatore"},
+    {"module_id": "risk_factors", "module_name": "Fattori di rischio e prevenzione", "coverage": "all_available_data", "expected_granularity": "regione_eta_sesso_indicatore_anno"},
 ]
 
 SOURCES = [
@@ -62,11 +46,14 @@ SOURCES = [
     {"source_id": "Agenas_specialistica_ambulatoriale", "provider": "Agenas", "dataset_name": "Specialistica ambulatoriale", "theme": "services", "source_page_url": "https://stat.agenas.it/web/index.php?r=site%2Fpublic", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "dashboard", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "Agenas/specialistica_ambulatoriale", "enabled": False},
     {"source_id": "Agenas_pnla", "provider": "Agenas", "dataset_name": "Piattaforma Nazionale Liste di Attesa", "theme": "waiting_times", "source_page_url": "https://www.portaletrasparenzaservizisanitari.it/piattaforma-nazionale-delle-liste-di-attesa/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "dashboard", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "Agenas/pnla", "enabled": False},
     {"source_id": "Agenas_pne", "provider": "Agenas", "dataset_name": "Programma Nazionale Esiti", "theme": "hospital_activity", "source_page_url": "https://www.agenas.gov.it/ricerca-e-sviluppo/758-che-cosa-e-pne", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "manual_review", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "Agenas/pne", "enabled": False},
-    {"source_id": "Agenas_personale", "provider": "Agenas", "dataset_name": "Fabbisogno personale sanitario", "theme": "workforce", "source_page_url": "https://www.agenas.gov.it/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "manual_review", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "Agenas/personale", "enabled": False},
     {"source_id": "ministero_salute_open_data", "provider": "Ministero della Salute", "dataset_name": "Open Data Ministero della Salute", "theme": "all", "source_page_url": "https://www.dati.salute.gov.it/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "web_page", "license": "IODL v2.0", "redistribution_allowed": "yes", "output_subfolder": "ministero_salute/open_data", "enabled": False},
     {"source_id": "ministero_salute_personale", "provider": "Ministero della Salute", "dataset_name": "Personale SSN", "theme": "workforce", "source_page_url": "https://www.dati.salute.gov.it/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "web_page", "license": "IODL v2.0", "redistribution_allowed": "yes", "output_subfolder": "ministero_salute/personale", "enabled": False},
     {"source_id": "ministero_salute_sdo", "provider": "Ministero della Salute", "dataset_name": "Schede dimissione ospedaliera e ricoveri", "theme": "hospital_activity", "source_page_url": "https://www.dati.salute.gov.it/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "web_page", "license": "IODL v2.0", "redistribution_allowed": "yes", "output_subfolder": "ministero_salute/sdo", "enabled": False},
-    {"source_id": "ministero_salute_emergenza", "provider": "Ministero della Salute", "dataset_name": "Emergenza urgenza", "theme": "emergency", "source_page_url": "https://www.dati.salute.gov.it/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "manual_review", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "ministero_salute/emergenza", "enabled": False},
+    {"source_id": "iss_epicentro", "provider": "ISS", "dataset_name": "EpiCentro ISS", "theme": "surveillance", "source_page_url": "https://www.epicentro.iss.it/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "web_page", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "iss/epicentro", "enabled": False},
+    {"source_id": "iss_respivirnet", "provider": "ISS", "dataset_name": "RespiVirNet", "theme": "surveillance", "source_page_url": "https://www.epicentro.iss.it/sorveglianza-infezioni-respiratorie-acute/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "web_page", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "iss/respivirnet", "enabled": False},
+    {"source_id": "iss_passi", "provider": "ISS", "dataset_name": "PASSI", "theme": "risk_factors", "source_page_url": "https://www.epicentro.iss.it/passi/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "web_page", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "iss/passi", "enabled": False},
+    {"source_id": "iss_passi_argento", "provider": "ISS", "dataset_name": "PASSI d Argento", "theme": "risk_factors", "source_page_url": "https://www.epicentro.iss.it/passi-argento/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "web_page", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "iss/passi_argento", "enabled": False},
+    {"source_id": "iss_okkio", "provider": "ISS", "dataset_name": "OKkio alla SALUTE", "theme": "risk_factors", "source_page_url": "https://www.epicentro.iss.it/okkioallasalute/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "web_page", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "iss/okkio", "enabled": False},
     {"source_id": "istat_demo", "provider": "ISTAT", "dataset_name": "Demografia e popolazione", "theme": "demography", "source_page_url": "https://demo.istat.it/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "web_page", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "istat/demografia", "enabled": False},
     {"source_id": "openbdap_sanita", "provider": "OpenBDAP", "dataset_name": "Spesa sanitaria e finanza SSN", "theme": "costs", "source_page_url": "https://openbdap.rgs.mef.gov.it/", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "web_page", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "openbdap/sanita", "enabled": False},
     {"source_id": "aifa_osmed", "provider": "AIFA", "dataset_name": "Rapporti OsMed e farmaci", "theme": "pharmaceutical", "source_page_url": "https://www.aifa.gov.it/rapporti-osmed", "download_url_csv": "", "download_url_json": "", "download_url_xml": "", "access_type": "manual_review", "license": "da_verificare", "redistribution_allowed": "unclear", "output_subfolder": "aifa/osmed", "enabled": False},
