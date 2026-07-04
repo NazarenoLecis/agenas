@@ -1,0 +1,1 @@
+Modulo spesa sanitaria regionale: output CSV e JSON, popolazione come denominatore, valori reali con deflatori, denominatori demografici specifici per area di spesa.
