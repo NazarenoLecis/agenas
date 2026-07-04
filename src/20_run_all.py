@@ -28,6 +28,7 @@ STEPS = [
     "src/03_normalize_ministero_salute.py",
     "src/04_normalize_Agenas.py",
     "src/05_build_indicators.py",
+    "src/52_build_health_expenditure_framework.py",
     "src/06_export_json.py",
     "src/07_build_charts.py",
     "src/16_data_requirements.py",
