@@ -25,6 +25,7 @@ STEPS = [
     "src/33_validate_discovered_links.py",
     "src/34_dataset_registry.py",
     "src/50_health_expenditure_registry.py",
+    "src/51_health_expenditure_resource_plan.py",
     "src/24_discover_ministero_salute_catalog.py",
     "src/37_source_ranking.py",
     "src/01_download_ministero_salute.py",
