@@ -4,12 +4,6 @@ Script: 02_download_Agenas.py
 Obiettivo
 Scaricare solo fonti Agenas abilitate e con URL diretto indicato in
 config/project_config.py.
-
-Uso
-1. Verificare licenza e riuso della fonte.
-2. Inserire URL diretti nella configurazione Python.
-3. Impostare enabled=True.
-4. Eseguire python src/02_download_Agenas.py.
 """
 
 import pandas as pd
@@ -17,6 +11,7 @@ import pandas as pd
 from utils_paths import get_project_root, get_configured_path, ensure_project_folders, load_project_config
 from utils_catalog import filter_enabled_sources
 from utils_download import download_file, infer_extension_from_url
+from utils_io import write_csv_json_pair
 
 
 def build_download_tasks(sources):
@@ -46,6 +41,13 @@ def run_downloads(tasks):
     return pd.DataFrame(log_rows)
 
 
+def append_previous_log(log, log_path):
+    if log_path.exists() and not log.empty:
+        previous_log = pd.read_csv(log_path)
+        return pd.concat([previous_log, log], ignore_index=True)
+    return log
+
+
 def main():
     ensure_project_folders()
     config = load_project_config()
@@ -53,11 +55,8 @@ def main():
     tasks = build_download_tasks(sources)
     log = run_downloads(tasks) if tasks else pd.DataFrame()
     log_path = get_configured_path("downloads_log")
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-    if log_path.exists() and not log.empty:
-        previous_log = pd.read_csv(log_path)
-        log = pd.concat([previous_log, log], ignore_index=True)
-    log.to_csv(log_path, index=False)
+    log = append_previous_log(log, log_path)
+    write_csv_json_pair(log, log_path.parent, log_path.stem)
     print(f"Agenas download log written to {log_path}")
 
 
