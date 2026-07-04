@@ -12,7 +12,6 @@ Output:
 from pathlib import Path
 import importlib.util
 import py_compile
-import tempfile
 import pandas as pd
 
 from utils_paths import get_project_root, get_configured_path, ensure_project_folders, load_project_config
@@ -87,12 +86,15 @@ def check_public_output_pairs(root):
     for stem in EXPECTED_PUBLIC_OUTPUT_STEMS:
         csv_path = root / f"{stem}.csv"
         json_path = root / f"{stem}.json"
+        csv_exists = csv_path.exists()
+        json_exists = json_path.exists()
+        passed = csv_exists and json_exists
         rows.append(audit_row(
             "csv_json_pairs",
             stem,
-            csv_path.exists() == json_path.exists(),
-            f"csv={csv_path.exists()};json={json_path.exists()}",
-            "missing csv/json counterpart" if csv_path.exists() != json_path.exists() else "ok",
+            passed,
+            f"csv={csv_exists};json={json_exists}",
+            "ok" if passed else "missing csv/json output pair",
         ))
     return rows
 
