@@ -33,6 +33,7 @@ data/processed/
 # Project metadata generated locally
 metadata/checksums/
 metadata/downloads_log.csv
+metadata/downloads_log.json
 
 # Project outputs generated locally
 outputs/figures/
@@ -46,3 +47,4 @@ outputs/dashboard_data/
 *.gz
 *.sqlite
 *.db
+*.duckdb
