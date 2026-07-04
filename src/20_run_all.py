@@ -35,6 +35,8 @@ STEPS = [
     "src/17_module_inventory.py",
     "src/22_quality_overview_v2.py",
     "src/23_source_audit.py",
+    "src/40_readme_outputs.py",
+    "src/54_project_audit.py",
     "src/25_build_duckdb.py",
     "src/31_build_dimensions.py",
 ]
