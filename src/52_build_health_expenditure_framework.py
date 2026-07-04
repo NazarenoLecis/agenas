@@ -1,8 +1,7 @@
 """
 Script: 52_build_health_expenditure_framework.py
 
-Obiettivo
-Preparare il modulo per spesa sanitaria regionale, popolazione, deflatori e
+Prepara il modulo per spesa sanitaria regionale, popolazione, deflatori e
 indicatori pro capite o per popolazione demografica rilevante.
 
 Lo script produce sempre CSV e JSON. Quando gli input locali sono disponibili,
@@ -18,7 +17,7 @@ import numpy as np
 import pandas as pd
 
 from utils_paths import get_project_root, get_configured_path, ensure_project_folders
-from utils_io import read_table, write_table
+from utils_io import read_table, write_csv_json_pair
 
 
 DEMOGRAPHY_INPUT_CANDIDATES = [
@@ -46,54 +45,12 @@ EXPENDITURE_INPUT_CANDIDATES = [
 ]
 
 SOURCE_PLAN = [
-    {
-        "source_id": "openbdap_ssn_ce_regionale",
-        "provider": "OpenBDAP / RGS",
-        "dataset_name": "Conto Economico enti SSN livello regionale",
-        "role_in_module": "spesa sanitaria di competenza",
-        "accounting_basis": "competenza_ce",
-        "source_page_url": "https://bdap-opendata.rgs.mef.gov.it/",
-    },
-    {
-        "source_id": "openbdap_ssn_ce_enti",
-        "provider": "OpenBDAP / RGS",
-        "dataset_name": "Conto Economico enti del SSN",
-        "role_in_module": "dettaglio per ente sanitario",
-        "accounting_basis": "competenza_ce",
-        "source_page_url": "https://bdap-opendata.rgs.mef.gov.it/",
-    },
-    {
-        "source_id": "siope_ssn_movimenti_cassa",
-        "provider": "SIOPE / RGS",
-        "dataset_name": "Movimenti di cassa enti SSN",
-        "role_in_module": "pagamenti e incassi di cassa",
-        "accounting_basis": "cassa_siope",
-        "source_page_url": "https://www.siope.it/",
-    },
-    {
-        "source_id": "istat_demo_population_age_region",
-        "provider": "ISTAT",
-        "dataset_name": "Popolazione residente per eta sesso regione",
-        "role_in_module": "denominatori demografici",
-        "accounting_basis": "",
-        "source_page_url": "https://demo.istat.it/",
-    },
-    {
-        "source_id": "istat_demo_births_region",
-        "provider": "ISTAT",
-        "dataset_name": "Nati vivi per regione",
-        "role_in_module": "denominatore per natalita e neonatologia",
-        "accounting_basis": "",
-        "source_page_url": "https://demo.istat.it/",
-    },
-    {
-        "source_id": "istat_prices_deflators",
-        "provider": "ISTAT",
-        "dataset_name": "Indici dei prezzi per deflazione della spesa",
-        "role_in_module": "spesa in termini reali",
-        "accounting_basis": "",
-        "source_page_url": "https://www.istat.it/it/archivio/prezzi+al+consumo",
-    },
+    {"source_id": "openbdap_ssn_ce_regionale", "provider": "OpenBDAP / RGS", "dataset_name": "Conto Economico enti SSN livello regionale", "role_in_module": "spesa sanitaria di competenza", "accounting_basis": "competenza_ce", "source_page_url": "https://bdap-opendata.rgs.mef.gov.it/"},
+    {"source_id": "openbdap_ssn_ce_enti", "provider": "OpenBDAP / RGS", "dataset_name": "Conto Economico enti del SSN", "role_in_module": "dettaglio per ente sanitario", "accounting_basis": "competenza_ce", "source_page_url": "https://bdap-opendata.rgs.mef.gov.it/"},
+    {"source_id": "siope_ssn_movimenti_cassa", "provider": "SIOPE / RGS", "dataset_name": "Movimenti di cassa enti SSN", "role_in_module": "pagamenti e incassi di cassa", "accounting_basis": "cassa_siope", "source_page_url": "https://www.siope.it/"},
+    {"source_id": "istat_demo_population_age_region", "provider": "ISTAT", "dataset_name": "Popolazione residente per eta sesso regione", "role_in_module": "denominatori demografici", "accounting_basis": "", "source_page_url": "https://demo.istat.it/"},
+    {"source_id": "istat_demo_births_region", "provider": "ISTAT", "dataset_name": "Nati vivi per regione", "role_in_module": "denominatore per natalita e neonatologia", "accounting_basis": "", "source_page_url": "https://demo.istat.it/"},
+    {"source_id": "istat_prices_deflators", "provider": "ISTAT", "dataset_name": "Indici dei prezzi per deflazione della spesa", "role_in_module": "spesa in termini reali", "accounting_basis": "", "source_page_url": "https://www.istat.it/it/archivio/prezzi+al+consumo"},
 ]
 
 DENOMINATOR_RULES = [
@@ -108,32 +65,20 @@ DENOMINATOR_RULES = [
 ]
 
 SCHEMA_COLUMNS = [
-    "year",
-    "region_code",
-    "region_name",
-    "source",
-    "accounting_basis",
-    "spending_area",
-    "spending_item_code",
-    "spending_item_name",
-    "amount_nominal_eur",
-    "amount_real_eur",
-    "price_base_year",
-    "deflator_used",
-    "population_total",
-    "population_0",
-    "population_0_4",
-    "population_0_14",
-    "population_0_17",
-    "births",
-    "women_15_49",
-    "population_65_plus",
-    "population_75_plus",
-    "population_80_plus",
-    "amount_per_capita",
-    "amount_per_relevant_population",
-    "relevant_population_type",
-    "relevant_population_value",
+    "year", "region_code", "region_name", "source", "accounting_basis",
+    "spending_area", "spending_item_code", "spending_item_name",
+    "amount_nominal_eur", "amount_real_eur", "price_base_year", "deflator_used",
+    "population_total", "population_0", "population_0_4", "population_0_14", "population_0_17",
+    "births", "women_15_49", "population_65_plus", "population_75_plus", "population_80_plus",
+    "amount_per_capita", "amount_real_per_capita",
+    "amount_per_relevant_population", "amount_real_per_relevant_population",
+    "relevant_population_type", "relevant_population_value",
+]
+
+DENOMINATOR_COLUMNS = [
+    "year", "region_code", "region_name", "population_total", "population_0", "population_0_4",
+    "population_0_14", "population_0_17", "births", "women_15_49",
+    "population_65_plus", "population_75_plus", "population_80_plus",
 ]
 
 
@@ -144,13 +89,6 @@ def load_health_config():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
-
-
-def write_csv_json_pair(df, folder, stem):
-    folder = Path(folder)
-    folder.mkdir(parents=True, exist_ok=True)
-    write_table(df, folder / f"{stem}.csv")
-    write_table(df, folder / f"{stem}.json")
 
 
 def find_first_existing_path(root, candidate_paths):
@@ -170,9 +108,9 @@ def load_optional_table(root, candidate_paths):
 
 def clean_column_name(column_name):
     value = str(column_name).strip().lower()
-    value = value.replace(" ", "_").replace("-", "_").replace(".", "_").replace("/", "_")
-    value = re.sub("_+", "_", value)
-    return value.strip("_")
+    value = re.sub(r"[^a-z0-9]+", "_", value)
+    value = re.sub(r"_+", "_", value).strip("_")
+    return value or "column"
 
 
 def clean_columns(df):
@@ -209,12 +147,14 @@ def parse_age(age_value):
 
 def normalize_sex(value):
     if pd.isna(value):
-        return ""
+        return "unknown"
     text = str(value).strip().lower()
-    if text in ["f", "female", "femmina", "donne", "donna"]:
+    if text in ["f", "female", "femmina", "femmine", "donne", "donna"]:
         return "female"
-    if text in ["m", "male", "maschio", "uomini", "uomo"]:
+    if text in ["m", "male", "maschio", "maschi", "uomini", "uomo"]:
         return "male"
+    if text in ["", "totale", "total", "tutti", "tutte", "all"]:
+        return "total"
     return text
 
 
@@ -228,11 +168,6 @@ def normalize_population_table(df):
     output = coalesce_columns(output, ["eta", "age", "classe_eta"], "age")
     output = coalesce_columns(output, ["sesso", "sex", "genere"], "sex")
     output = coalesce_columns(output, ["valore", "value", "popolazione", "population", "residenti"], "population")
-
-    required_columns = ["year", "region_name", "age", "population"]
-    if any(column not in output.columns for column in required_columns):
-        return pd.DataFrame()
-
     output["year"] = pd.to_numeric(output["year"], errors="coerce")
     output["age_numeric"] = output["age"].apply(parse_age)
     output["sex_normalized"] = output["sex"].apply(normalize_sex)
@@ -240,27 +175,35 @@ def normalize_population_table(df):
     output["region_name"] = output["region_name"].astype(str).str.strip()
     output["region_code"] = output["region_code"].fillna("").astype(str).str.strip()
     output = output.dropna(subset=["year", "region_name", "age_numeric", "population"])
+    if output.empty:
+        return output
     output["year"] = output["year"].astype(int)
     output["age_numeric"] = output["age_numeric"].astype(int)
     return output
 
 
+def total_population_rows(group):
+    total_rows = group[group["sex_normalized"] == "total"]
+    if not total_rows.empty:
+        return total_rows
+    return group[group["sex_normalized"].isin(["male", "female", "unknown"])]
+
+
 def sum_population(group, min_age=None, max_age=None, sex=None):
-    subset = group
+    subset = group[group["sex_normalized"] == sex] if sex else total_population_rows(group)
     if min_age is not None:
         subset = subset[subset["age_numeric"] >= min_age]
     if max_age is not None:
         subset = subset[subset["age_numeric"] <= max_age]
-    if sex is not None:
-        subset = subset[subset["sex_normalized"] == sex]
+    if subset.empty:
+        return np.nan
     return subset["population"].sum()
 
 
 def build_population_denominators(population_df):
     normalized = normalize_population_table(population_df)
     if normalized.empty:
-        return pd.DataFrame()
-
+        return pd.DataFrame(columns=DENOMINATOR_COLUMNS)
     rows = []
     for keys, group in normalized.groupby(["year", "region_code", "region_name"], dropna=False):
         year, region_code, region_name = keys
@@ -273,52 +216,46 @@ def build_population_denominators(population_df):
             "population_0_4": sum_population(group, 0, 4),
             "population_0_14": sum_population(group, 0, 14),
             "population_0_17": sum_population(group, 0, 17),
+            "births": np.nan,
             "women_15_49": sum_population(group, 15, 49, "female"),
             "population_65_plus": sum_population(group, 65, None),
             "population_75_plus": sum_population(group, 75, None),
             "population_80_plus": sum_population(group, 80, None),
         })
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, columns=DENOMINATOR_COLUMNS)
 
 
 def normalize_births_table(df):
     if df.empty:
-        return pd.DataFrame()
+        return pd.DataFrame(columns=["year", "region_code", "region_name", "births"])
     output = clean_columns(df)
     output = coalesce_columns(output, ["anno", "year", "time", "periodo"], "year")
     output = coalesce_columns(output, ["codice_regione", "region_code", "cod_reg", "codice"], "region_code")
     output = coalesce_columns(output, ["regione", "region_name", "territorio", "ripartizione"], "region_name")
     output = coalesce_columns(output, ["nati", "nati_vivi", "births", "valore", "value"], "births")
-    if any(column not in output.columns for column in ["year", "region_name", "births"]):
-        return pd.DataFrame()
     output["year"] = pd.to_numeric(output["year"], errors="coerce")
     output["births"] = pd.to_numeric(output["births"], errors="coerce")
     output["region_name"] = output["region_name"].astype(str).str.strip()
     output["region_code"] = output["region_code"].fillna("").astype(str).str.strip()
     output = output.dropna(subset=["year", "region_name", "births"])
+    if output.empty:
+        return pd.DataFrame(columns=["year", "region_code", "region_name", "births"])
     output["year"] = output["year"].astype(int)
     return output[["year", "region_code", "region_name", "births"]]
 
 
 def merge_births(denominators, births):
-    if denominators.empty:
-        return denominators
-    output = denominators.copy()
     if births.empty:
-        output["births"] = np.nan
-        return output
-
-    by_code = output.merge(
-        births[["year", "region_code", "births"]],
-        on=["year", "region_code"],
-        how="left",
-    )
-    by_name = output.merge(
-        births[["year", "region_name", "births"]],
-        on=["year", "region_name"],
-        how="left",
-    )
-    output["births"] = by_code["births"].combine_first(by_name["births"])
+        return denominators
+    if denominators.empty:
+        output = births.copy()
+        for column in DENOMINATOR_COLUMNS:
+            if column not in output.columns:
+                output[column] = np.nan
+        return output[DENOMINATOR_COLUMNS]
+    output = denominators.copy()
+    by_name = output.merge(births[["year", "region_name", "births"]], on=["year", "region_name"], how="left", suffixes=("", "_births"))
+    output["births"] = output["births"].combine_first(by_name["births_births"])
     return output
 
 
@@ -326,20 +263,18 @@ def normalize_deflators_table(df, settings):
     columns = ["year", "deflator_used", "price_index", "price_base_year"]
     if df.empty:
         return pd.DataFrame(columns=columns)
-
     output = clean_columns(df)
     output = coalesce_columns(output, ["anno", "year", "time", "periodo"], "year")
     output = coalesce_columns(output, ["deflator_used", "indice", "index_name", "serie"], "deflator_used")
     output = coalesce_columns(output, ["price_index", "indice_prezzi", "index_value", "value", "valore"], "price_index")
     output = coalesce_columns(output, ["price_base_year", "base_year", "anno_base"], "price_base_year")
-    if any(column not in output.columns for column in ["year", "price_index"]):
-        return pd.DataFrame(columns=columns)
-
     output["year"] = pd.to_numeric(output["year"], errors="coerce")
     output["price_index"] = pd.to_numeric(output["price_index"], errors="coerce")
     output["deflator_used"] = output["deflator_used"].fillna(settings["default_deflator"])
     output["price_base_year"] = pd.to_numeric(output["price_base_year"], errors="coerce").fillna(settings["base_price_year"])
     output = output.dropna(subset=["year", "price_index"])
+    if output.empty:
+        return pd.DataFrame(columns=columns)
     output["year"] = output["year"].astype(int)
     output["price_base_year"] = output["price_base_year"].astype(int)
     return output[columns]
@@ -348,7 +283,6 @@ def normalize_deflators_table(df, settings):
 def normalize_expenditure_table(df, settings):
     if df.empty:
         return pd.DataFrame()
-
     output = clean_columns(df)
     output = coalesce_columns(output, ["anno", "year", "time", "periodo"], "year")
     output = coalesce_columns(output, ["codice_regione", "region_code", "cod_reg", "codice"], "region_code")
@@ -359,46 +293,27 @@ def normalize_expenditure_table(df, settings):
     output = coalesce_columns(output, ["codice_voce", "spending_item_code", "codice_gestionale", "voce_codice"], "spending_item_code")
     output = coalesce_columns(output, ["voce", "spending_item_name", "descrizione", "descrizione_voce"], "spending_item_name")
     output = coalesce_columns(output, ["importo", "amount_nominal_eur", "valore", "value"], "amount_nominal_eur")
-
-    required_columns = ["year", "region_name", "spending_area", "amount_nominal_eur"]
-    if any(column not in output.columns for column in required_columns):
-        return pd.DataFrame()
-
     output["year"] = pd.to_numeric(output["year"], errors="coerce")
     output["amount_nominal_eur"] = pd.to_numeric(output["amount_nominal_eur"], errors="coerce")
     output["region_name"] = output["region_name"].astype(str).str.strip()
     output["spending_area"] = output["spending_area"].fillna("").astype(str).str.strip()
-
     for column in ["region_code", "source", "accounting_basis", "spending_item_code", "spending_item_name"]:
         output[column] = output[column].fillna("").astype(str).str.strip()
-
     output["source"] = output["source"].replace("", "not_specified")
     output["accounting_basis"] = output["accounting_basis"].replace("", settings["default_accounting_basis"])
     output = output.dropna(subset=["year", "region_name", "amount_nominal_eur"])
+    if output.empty:
+        return pd.DataFrame()
     output["year"] = output["year"].astype(int)
-
-    return output[
-        [
-            "year",
-            "region_code",
-            "region_name",
-            "source",
-            "accounting_basis",
-            "spending_area",
-            "spending_item_code",
-            "spending_item_name",
-            "amount_nominal_eur",
-        ]
-    ]
+    return output[["year", "region_code", "region_name", "source", "accounting_basis", "spending_area", "spending_item_code", "spending_item_name", "amount_nominal_eur"]]
 
 
 def match_relevant_population_type(row):
     text = " ".join([str(row.get("spending_area", "")), str(row.get("spending_item_name", ""))]).lower()
     for rule in sorted(DENOMINATOR_RULES, key=lambda item: item["priority"]):
-        keywords = rule["keywords"]
-        if not keywords:
+        if not rule["keywords"]:
             return rule["relevant_population_type"]
-        if any(keyword.lower() in text for keyword in keywords):
+        if any(keyword.lower() in text for keyword in rule["keywords"]):
             return rule["relevant_population_type"]
     return "population_total"
 
@@ -406,61 +321,55 @@ def match_relevant_population_type(row):
 def add_real_amounts(expenditure, deflators, settings):
     if expenditure.empty:
         return expenditure
-
     output = expenditure.copy()
     default_deflator = settings["default_deflator"]
     base_year = settings["base_price_year"]
     output["deflator_used"] = default_deflator
     output["price_base_year"] = base_year
-
     if deflators.empty:
         output["amount_real_eur"] = np.nan
         return output
-
     selected = deflators[deflators["deflator_used"] == default_deflator].copy()
     if selected.empty:
         selected = deflators.copy()
-
+        output["deflator_used"] = selected["deflator_used"].iloc[0]
     base_values = selected[selected["year"] == base_year]["price_index"]
     if base_values.empty:
         output["amount_real_eur"] = np.nan
         return output
-
     base_value = base_values.iloc[0]
-    selected = selected[["year", "price_index"]].rename(columns={"price_index": "deflator_year_value"})
+    selected = selected[["year", "price_index"]].drop_duplicates("year").rename(columns={"price_index": "deflator_year_value"})
     output = output.merge(selected, on="year", how="left")
     output["amount_real_eur"] = output["amount_nominal_eur"] * base_value / output["deflator_year_value"]
-    output = output.drop(columns=["deflator_year_value"])
-    return output
+    return output.drop(columns=["deflator_year_value"])
+
+
+def safe_divide(numerator, denominator):
+    return np.where((pd.notna(denominator)) & (denominator != 0), numerator / denominator, np.nan)
 
 
 def add_demographic_adjustments(expenditure, denominators):
     if expenditure.empty:
         return expenditure
-
     output = expenditure.copy()
     output["relevant_population_type"] = output.apply(match_relevant_population_type, axis=1)
-
-    if denominators.empty:
-        output["amount_per_capita"] = np.nan
-        output["relevant_population_value"] = np.nan
-        output["amount_per_relevant_population"] = np.nan
-        return output
-
-    denominator_columns = [column for column in denominators.columns if column != "region_code"]
-    output = output.merge(denominators[denominator_columns], on=["year", "region_name"], how="left")
-    output["amount_per_capita"] = output["amount_nominal_eur"] / output["population_total"]
-    output["relevant_population_value"] = output.apply(
-        lambda row: row.get(row["relevant_population_type"], np.nan),
-        axis=1,
-    )
-    output["amount_per_relevant_population"] = output["amount_nominal_eur"] / output["relevant_population_value"]
+    if not denominators.empty:
+        merge_columns = [column for column in denominators.columns if column != "region_code"]
+        output = output.merge(denominators[merge_columns], on=["year", "region_name"], how="left")
+    for column in DENOMINATOR_COLUMNS:
+        if column not in output.columns:
+            output[column] = np.nan
+    output["amount_per_capita"] = safe_divide(output["amount_nominal_eur"], output["population_total"])
+    output["amount_real_per_capita"] = safe_divide(output["amount_real_eur"], output["population_total"])
+    output["relevant_population_value"] = output.apply(lambda row: row.get(row["relevant_population_type"], np.nan), axis=1)
+    output["amount_per_relevant_population"] = safe_divide(output["amount_nominal_eur"], output["relevant_population_value"])
+    output["amount_real_per_relevant_population"] = safe_divide(output["amount_real_eur"], output["relevant_population_value"])
     return output
 
 
 def build_schema_table():
-    rows = [{"column_name": column, "required": column in ["year", "region_name", "accounting_basis", "spending_area", "amount_nominal_eur"]} for column in SCHEMA_COLUMNS]
-    return pd.DataFrame(rows)
+    required = {"year", "region_name", "accounting_basis", "spending_area", "amount_nominal_eur"}
+    return pd.DataFrame([{"column_name": column, "required": column in required} for column in SCHEMA_COLUMNS])
 
 
 def build_rules_table():
@@ -472,63 +381,33 @@ def build_rules_table():
     return pd.DataFrame(rows)
 
 
-def empty_denominators_dataset():
-    return pd.DataFrame(columns=[
-        "year",
-        "region_code",
-        "region_name",
-        "population_total",
-        "population_0",
-        "population_0_4",
-        "population_0_14",
-        "population_0_17",
-        "births",
-        "women_15_49",
-        "population_65_plus",
-        "population_75_plus",
-        "population_80_plus",
-    ])
-
-
-def empty_deflators_dataset():
-    return pd.DataFrame(columns=["year", "deflator_used", "price_index", "price_base_year"])
-
-
-def empty_health_expenditure_dataset():
-    return pd.DataFrame(columns=SCHEMA_COLUMNS)
-
-
-def align_health_expenditure_columns(df):
-    if df.empty:
-        return empty_health_expenditure_dataset()
-    output = df.copy()
-    for column in SCHEMA_COLUMNS:
+def align_columns(df, columns):
+    output = df.copy() if not df.empty else pd.DataFrame()
+    for column in columns:
         if column not in output.columns:
             output[column] = np.nan
-    return output[SCHEMA_COLUMNS]
+    return output[columns]
 
 
-def write_outputs(health_config, denominators, deflators, expenditure_adjusted):
+def write_outputs(health_config, denominators, deflators, expenditure_nominal_real, expenditure_adjusted):
     processed_root = get_configured_path("data_processed")
     tables_root = get_configured_path("outputs_tables")
-
     processed_demography = processed_root / "demography"
     processed_health = processed_root / "health_expenditure"
     processed_prices = processed_root / "prices"
 
-    if denominators.empty:
-        denominators = empty_denominators_dataset()
-    if deflators.empty:
-        deflators = empty_deflators_dataset()
-    expenditure_adjusted = align_health_expenditure_columns(expenditure_adjusted)
+    denominators = align_columns(denominators, DENOMINATOR_COLUMNS)
+    deflators = align_columns(deflators, ["year", "deflator_used", "price_index", "price_base_year"])
+    expenditure_nominal_real = align_columns(expenditure_nominal_real, [column for column in SCHEMA_COLUMNS if column not in DENOMINATOR_COLUMNS and not column.startswith("amount_per") and column not in ["relevant_population_type", "relevant_population_value"]])
+    expenditure_adjusted = align_columns(expenditure_adjusted, SCHEMA_COLUMNS)
 
     write_csv_json_pair(pd.DataFrame(SOURCE_PLAN), tables_root, "health_expenditure_source_plan")
     write_csv_json_pair(build_schema_table(), tables_root, "health_expenditure_required_schema")
     write_csv_json_pair(pd.DataFrame(health_config.DEMOGRAPHIC_DENOMINATORS), tables_root, "health_expenditure_denominator_dictionary")
     write_csv_json_pair(build_rules_table(), tables_root, "health_expenditure_denominator_rules")
-
     write_csv_json_pair(denominators, processed_demography, "demographic_denominators_region_year")
     write_csv_json_pair(deflators, processed_prices, "price_deflators")
+    write_csv_json_pair(expenditure_nominal_real, processed_health, "regional_health_expenditure_nominal_real")
     write_csv_json_pair(expenditure_adjusted, processed_health, "regional_health_expenditure_demographic_adjusted")
     write_csv_json_pair(expenditure_adjusted, tables_root, "regional_health_expenditure_demographic_adjusted")
 
@@ -546,14 +425,12 @@ def main():
 
     denominators = build_population_denominators(population_raw)
     denominators = merge_births(denominators, normalize_births_table(births_raw))
-
     deflators = normalize_deflators_table(deflators_raw, settings)
-
     expenditure = normalize_expenditure_table(expenditure_raw, settings)
-    expenditure = add_real_amounts(expenditure, deflators, settings)
-    expenditure_adjusted = add_demographic_adjustments(expenditure, denominators)
+    expenditure_nominal_real = add_real_amounts(expenditure, deflators, settings)
+    expenditure_adjusted = add_demographic_adjustments(expenditure_nominal_real, denominators)
 
-    write_outputs(health_config, denominators, deflators, expenditure_adjusted)
+    write_outputs(health_config, denominators, deflators, expenditure_nominal_real, expenditure_adjusted)
 
     print("Health expenditure framework written")
     print(f"Population input: {population_path if population_path else 'missing'}")
