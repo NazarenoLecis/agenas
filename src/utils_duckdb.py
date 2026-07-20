@@ -45,20 +45,22 @@ def quote_identifier(identifier):
     return '"' + str(identifier).replace('"', '""') + '"'
 
 
+def quote_literal(value):
+    """
+    Quota una stringa SQL DuckDB in modo sicuro.
+    """
+    return "'" + str(value).replace("'", "''") + "'"
+
+
 def register_file(connection, file_path, table_name=None, root=None):
     file_path = Path(file_path)
     table_name = table_name or safe_table_name(file_path, root=root)
     quoted_table_name = quote_identifier(table_name)
+    quoted_file_path = quote_literal(file_path)
     if file_path.suffix.lower() == ".csv":
-        connection.execute(
-            f"CREATE OR REPLACE VIEW {quoted_table_name} AS SELECT * FROM read_csv_auto(?)",
-            [str(file_path)],
-        )
+        connection.execute(f"CREATE OR REPLACE VIEW {quoted_table_name} AS SELECT * FROM read_csv_auto({quoted_file_path})")
     elif file_path.suffix.lower() == ".parquet":
-        connection.execute(
-            f"CREATE OR REPLACE VIEW {quoted_table_name} AS SELECT * FROM read_parquet(?)",
-            [str(file_path)],
-        )
+        connection.execute(f"CREATE OR REPLACE VIEW {quoted_table_name} AS SELECT * FROM read_parquet({quoted_file_path})")
     else:
         return None
     return table_name

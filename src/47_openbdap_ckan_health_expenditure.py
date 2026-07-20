@@ -11,14 +11,13 @@ operativo delle risorse candidate.
 from datetime import datetime
 import re
 import pandas as pd
-import requests
 
 from utils_paths import get_configured_path, ensure_project_folders
 from utils_io import write_csv_json_pair, write_json_object
+from utils_web import get_public_url
 
 
 CKAN_ACTION_BASE = "https://bdap-opendata.rgs.mef.gov.it/SpodCkanApi/api/3/action"
-HEADERS = {"User-Agent": "Agenas-data-analysis/0.1"}
 TIMEOUT_SECONDS = 45
 
 SEARCH_QUERIES = [
@@ -47,7 +46,7 @@ def normalize_text(value):
 
 def ckan_action(action, params=None):
     url = f"{CKAN_ACTION_BASE}/{action}"
-    response = requests.get(url, params=params or {}, headers=HEADERS, timeout=TIMEOUT_SECONDS)
+    response = get_public_url(url, params=params or {}, timeout_seconds=TIMEOUT_SECONDS)
     response.raise_for_status()
     payload = response.json()
     if not payload.get("success", False):

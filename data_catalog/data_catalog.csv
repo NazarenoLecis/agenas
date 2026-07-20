@@ -1,12 +1,25 @@
-source_id,provider,dataset_name,theme,source_page_url,access_type,license,redistribution_allowed,download_status,notes
-Agenas_portale_statistico,Agenas,Portale Statistico Agenas,portale_statistico,https://stat.agenas.it/web/index.php?r=site%2Fpublic,dashboard,da_verificare,unclear,manual_review,Cruscotti e report da verificare
-Agenas_mobilita,Agenas,Mobilita sanitaria,mobility,https://stat.agenas.it/web/index.php?r=site%2Fpublic,dashboard,da_verificare,unclear,manual_review,Flussi origine destinazione e prestazioni
-Agenas_mobilita_economica,Agenas,Risultati economici mobilita,costs,https://stat.agenas.it/web/index.php?r=site%2Fpublic,dashboard,da_verificare,unclear,manual_review,Valore economico dei flussi
-Agenas_specialistica,Agenas,Specialistica ambulatoriale,services,https://stat.agenas.it/web/index.php?r=site%2Fpublic,dashboard,da_verificare,unclear,manual_review,Prestazioni ambulatoriali
-Agenas_pne,Agenas,Programma Nazionale Esiti,hospital_activity,https://www.agenas.gov.it/ricerca-e-sviluppo/758-che-cosa-e-pne,manual_review,da_verificare,unclear,manual_review,Indicatori e volumi
-Agenas_pnla,Agenas,Liste di attesa,waiting_times,https://www.portaletrasparenzaservizisanitari.it/piattaforma-nazionale-delle-liste-di-attesa/,dashboard,da_verificare,unclear,manual_review,Tempi e priorita
-Agenas_personale,Agenas,Fabbisogno personale,workforce,https://www.agenas.gov.it/ricerca-e-sviluppo/758-che-cosa-e-pne,manual_review,da_verificare,unclear,manual_review,Personale sanitario
-ministero_salute_open_data,Ministero della Salute,Open Data Ministero Salute,open_data,https://www.dati.salute.gov.it/,web_page,IODL,yes,pending,Fonte prioritaria
-ministero_salute_personale,Ministero della Salute,Personale SSN,workforce,https://www.dati.salute.gov.it/,web_page,IODL,yes,manual_review,Professioni sanitarie
-ministero_salute_sdo,Ministero della Salute,Ricoveri SDO,hospital_activity,https://www.dati.salute.gov.it/,web_page,IODL,yes,manual_review,Ricoveri e dimissioni
-ministero_salute_emergenza,Ministero della Salute,Emergenza,emergency,https://www.dati.salute.gov.it/,manual_review,da_verificare,unclear,manual_review,Accessi e triage
+source_id,provider,dataset_name,theme,source_page_url,download_url_csv,download_url_json,download_url_xml,access_type,license,redistribution_allowed,output_subfolder,enabled,last_checked,download_status,notes
+Agenas_portale_statistico,Agenas,Portale Statistico Agenas,all,https://stat.agenas.it/web/index.php?r=site%2Fpublic,,,,dashboard,da_verificare,unclear,Agenas/portale_statistico,False,2026-07-20,manual_review,
+Agenas_mobilita,Agenas,Mobilita sanitaria,mobility_flows,https://stat.agenas.it/web/index.php?r=site%2Fpublic,,,,dashboard,da_verificare,unclear,Agenas/mobilita,False,2026-07-20,manual_review,
+Agenas_mobilita_economica,Agenas,Risultati economici della mobilita,costs,https://stat.agenas.it/web/index.php?r=site%2Fpublic,,,,dashboard,da_verificare,unclear,Agenas/mobilita_economica,False,2026-07-20,manual_review,
+Agenas_specialistica_ambulatoriale,Agenas,Specialistica ambulatoriale,services,https://stat.agenas.it/web/index.php?r=site%2Fpublic,,,,dashboard,da_verificare,unclear,Agenas/specialistica_ambulatoriale,False,2026-07-20,manual_review,
+Agenas_pnla,Agenas,Piattaforma Nazionale Liste di Attesa,waiting_times,https://www.portaletrasparenzaservizisanitari.it/piattaforma-nazionale-delle-liste-di-attesa/,,,,dashboard,da_verificare,unclear,Agenas/pnla,False,2026-07-20,manual_review,
+Agenas_pne,Agenas,Programma Nazionale Esiti,hospital_activity,https://www.agenas.gov.it/ricerca-e-sviluppo/758-che-cosa-e-pne,,,,manual_review,da_verificare,unclear,Agenas/pne,False,2026-07-20,manual_review,
+ministero_salute_open_data,Ministero della Salute,Open Data Ministero della Salute,all,https://www.dati.salute.gov.it/,,,,web_page,IODL v2.0,yes,ministero_salute/open_data,False,2026-07-20,manual_review,
+ministero_salute_personale,Ministero della Salute,Personale SSN,workforce,https://www.dati.salute.gov.it/,,,,web_page,IODL v2.0,yes,ministero_salute/personale,False,2026-07-20,manual_review,
+ministero_salute_sdo,Ministero della Salute,Schede dimissione ospedaliera e ricoveri,hospital_activity,https://www.dati.salute.gov.it/,,,,web_page,IODL v2.0,yes,ministero_salute/sdo,False,2026-07-20,manual_review,
+iss_epicentro,ISS,EpiCentro ISS,surveillance,https://www.epicentro.iss.it/,,,,web_page,da_verificare,unclear,iss/epicentro,False,2026-07-20,manual_review,
+iss_respivirnet,ISS,RespiVirNet,surveillance,https://www.epicentro.iss.it/sorveglianza-infezioni-respiratorie-acute/,,,,web_page,da_verificare,unclear,iss/respivirnet,False,2026-07-20,manual_review,
+iss_passi,ISS,PASSI,risk_factors,https://www.epicentro.iss.it/passi/,,,,web_page,da_verificare,unclear,iss/passi,False,2026-07-20,manual_review,
+iss_passi_argento,ISS,PASSI d Argento,risk_factors,https://www.epicentro.iss.it/passi-argento/,,,,web_page,da_verificare,unclear,iss/passi_argento,False,2026-07-20,manual_review,
+iss_okkio,ISS,OKkio alla SALUTE,risk_factors,https://www.epicentro.iss.it/okkioallasalute/,,,,web_page,da_verificare,unclear,iss/okkio,False,2026-07-20,manual_review,
+istat_demo,ISTAT,Demografia e popolazione,demography,https://demo.istat.it/,,,,web_page,da_verificare,unclear,istat/demografia,False,2026-07-20,manual_review,
+istat_population_age_region,ISTAT,Popolazione residente per eta sesso e territorio,demography_denominators,https://demo.istat.it/app/?i=POS&l=it,,,,web_page,da_verificare,unclear,istat/demografia/popolazione_eta,False,2026-07-20,manual_review,
+istat_births_region,ISTAT,Nati vivi per regione,demography_denominators,https://demo.istat.it/,,,,web_page,da_verificare,unclear,istat/demografia/nascite,False,2026-07-20,manual_review,
+istat_price_deflators,ISTAT,Indici prezzi e deflatori,price_deflators,https://www.istat.it/it/archivio/prezzi+al+consumo,,,,web_page,da_verificare,unclear,istat/prezzi,False,2026-07-20,manual_review,
+openbdap_sanita,OpenBDAP,Spesa sanitaria e finanza SSN,costs,https://openbdap.rgs.mef.gov.it/,,,,web_page,da_verificare,unclear,openbdap/sanita,False,2026-07-20,manual_review,
+openbdap_api,OpenBDAP,Catalogo OpenBDAP API CKAN,all,https://bdap-opendata.rgs.mef.gov.it/content/api,,,,ckan_api,da_verificare,unclear,openbdap/catalogo,False,2026-07-20,manual_review,
+openbdap_ssn_ce_regionale,OpenBDAP,Conto Economico enti SSN livello regionale,health_expenditure,https://bdap-opendata.rgs.mef.gov.it/,,,,ckan_api,da_verificare,unclear,openbdap/ssn/conto_economico_regionale,False,2026-07-20,manual_review,
+openbdap_ssn_ce_enti,OpenBDAP,Conto Economico enti del SSN,health_expenditure,https://bdap-opendata.rgs.mef.gov.it/,,,,ckan_api,da_verificare,unclear,openbdap/ssn/conto_economico_enti,False,2026-07-20,manual_review,
+siope_ssn_movimenti_cassa,SIOPE,Movimenti di cassa enti SSN,health_expenditure,https://www.siope.it/Siope/,,,,web_page,da_verificare,unclear,siope/ssn/movimenti_cassa,False,2026-07-20,manual_review,
+aifa_osmed,AIFA,Rapporti OsMed e farmaci,pharmaceutical,https://www.aifa.gov.it/rapporti-osmed,,,,manual_review,da_verificare,unclear,aifa/osmed,False,2026-07-20,manual_review,

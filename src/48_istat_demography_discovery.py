@@ -8,27 +8,20 @@ struttura per eta. Non scarica i file dati.
 """
 
 from datetime import datetime
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin
 import re
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 
 from utils_paths import get_configured_path, ensure_project_folders
 from utils_io import write_csv_json_pair
+from utils_web import get_public_url, is_http_url, parse_html, should_skip_href, REQUEST_TIMEOUT_SECONDS
 
 
-HEADERS = {"User-Agent": "Agenas-data-analysis/0.1"}
 URLS = [
     {"source_id": "istat_population_age_region", "source_page_url": "https://demo.istat.it/app/?i=POS&l=it", "source_role": "population_by_age_sex"},
     {"source_id": "istat_demo_home", "source_page_url": "https://demo.istat.it/", "source_role": "demography_index"},
 ]
 KEYWORDS = ["popolazione", "eta", "sesso", "nasc", "nati", "csv", "zip", "download", "scarica", "regione", "ripartizioni"]
-SKIP_SCHEMES = {"mailto", "tel", "javascript", "data"}
-
-
-def is_http_url(url):
-    return urlparse(str(url)).scheme in {"http", "https"}
 
 
 def normalize_text(value):
@@ -49,9 +42,9 @@ def classify_url(url, text):
 
 def fetch_links(source):
     url = source["source_page_url"]
-    response = requests.get(url, headers=HEADERS, timeout=30)
+    response = get_public_url(url, timeout_seconds=REQUEST_TIMEOUT_SECONDS)
     response.raise_for_status()
-    soup = BeautifulSoup(response.text, "lxml")
+    soup = parse_html(response.text)
     rows = []
     checked_at = datetime.now().isoformat(timespec="seconds")
     for link in soup.find_all("a"):
@@ -59,7 +52,7 @@ def fetch_links(source):
         text = link.get_text(" ", strip=True)
         title = link.get("title", "") or link.get("aria-label", "")
         marker_text = " ".join([text, title])
-        if not href or urlparse(href).scheme in SKIP_SCHEMES:
+        if should_skip_href(href):
             continue
         absolute = urljoin(url, href)
         if not is_http_url(absolute):

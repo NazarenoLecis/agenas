@@ -5,22 +5,15 @@ Discovery mirata del portale Open Data del Ministero della Salute.
 La prima versione raccoglie link candidati dalla pagina configurata.
 """
 
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 
 from utils_paths import get_configured_path, ensure_project_folders, load_project_config
 from utils_io import write_csv_json_pair
+from utils_web import get_public_url, is_http_url, parse_html, should_skip_href, REQUEST_TIMEOUT_SECONDS
 
 
-HEADERS = {"User-Agent": "Agenas-data-analysis/0.1"}
 FILE_EXTENSIONS = [".csv", ".json", ".xml", ".xlsx", ".zip"]
-SKIP_SCHEMES = {"mailto", "tel", "javascript", "data"}
-
-
-def is_http_url(url):
-    return urlparse(str(url)).scheme in {"http", "https"}
 
 
 def is_candidate(url):
@@ -31,13 +24,13 @@ def is_candidate(url):
 def discover_page(source_url):
     if not source_url or not is_http_url(source_url):
         return pd.DataFrame([{"found_url": "", "link_text": "", "error": "missing_or_invalid_url"}])
-    response = requests.get(source_url, headers=HEADERS, timeout=30)
+    response = get_public_url(source_url, timeout_seconds=REQUEST_TIMEOUT_SECONDS)
     response.raise_for_status()
-    soup = BeautifulSoup(response.text, "lxml")
+    soup = parse_html(response.text)
     rows = []
     for link in soup.find_all("a"):
         href = link.get("href")
-        if not href or urlparse(href).scheme in SKIP_SCHEMES:
+        if should_skip_href(href):
             continue
         absolute = urljoin(source_url, href)
         if is_http_url(absolute) and is_candidate(absolute):

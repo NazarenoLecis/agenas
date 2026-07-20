@@ -18,6 +18,7 @@ from utils_io import read_table, write_table
 
 
 SUPPORTED_INPUTS = [".csv", ".json", ".parquet"]
+INVENTORY_COLUMNS = ["dataset_path", "file_format", "rows", "columns", "column_names", "error"]
 
 
 def find_processed_files(processed_folder):
@@ -39,6 +40,7 @@ def build_dataset_inventory(files, processed_root):
                 "rows": len(df),
                 "columns": len(df.columns),
                 "column_names": ";".join(df.columns.astype(str)),
+                "error": "",
             })
         except Exception as error:
             rows.append({
@@ -49,7 +51,7 @@ def build_dataset_inventory(files, processed_root):
                 "column_names": "",
                 "error": str(error),
             })
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, columns=INVENTORY_COLUMNS)
 
 
 def main():

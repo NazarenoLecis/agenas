@@ -8,27 +8,20 @@ SIOPE e trattato come fonte di cassa. Il modulo non scarica dati massivi.
 """
 
 from datetime import datetime
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin
 import re
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 
 from utils_paths import get_configured_path, ensure_project_folders
 from utils_io import write_csv_json_pair
+from utils_web import get_public_url, is_http_url, parse_html, should_skip_href, REQUEST_TIMEOUT_SECONDS
 
 
-HEADERS = {"User-Agent": "Agenas-data-analysis/0.1"}
 URLS = [
     "https://www.siope.it/Siope/",
     "https://www.siope.it/Siope/html/help_on_line.pdf",
 ]
 KEYWORDS = ["download", "scarica", "enti", "aggregati", "serie", "storiche", "cassa", "pagamenti", "incassi", "guida", "pdf", "csv", "xls"]
-SKIP_SCHEMES = {"mailto", "tel", "javascript", "data"}
-
-
-def is_http_url(url):
-    return urlparse(str(url)).scheme in {"http", "https"}
 
 
 def normalize_text(value):
@@ -49,19 +42,19 @@ def classify_url(url, text):
 
 def fetch_source(url):
     checked_at = datetime.now().isoformat(timespec="seconds")
-    response = requests.get(url, headers=HEADERS, timeout=30)
+    response = get_public_url(url, timeout_seconds=REQUEST_TIMEOUT_SECONDS)
     response.raise_for_status()
     content_type = response.headers.get("content-type", "")
     if "pdf" in content_type.lower() or url.lower().endswith(".pdf"):
         return [{"source_id": "siope", "provider": "SIOPE", "source_page_url": url, "url": url, "link_text": "SIOPE documentation", "link_type": "documentation", "checked_at": checked_at, "error": ""}]
-    soup = BeautifulSoup(response.text, "lxml")
+    soup = parse_html(response.text)
     rows = []
     for link in soup.find_all("a"):
         href = link.get("href")
         text = link.get_text(" ", strip=True)
         title = link.get("title", "") or link.get("aria-label", "")
         marker_text = " ".join([text, title])
-        if not href or urlparse(href).scheme in SKIP_SCHEMES:
+        if should_skip_href(href):
             continue
         absolute = urljoin(url, href)
         if not is_http_url(absolute):

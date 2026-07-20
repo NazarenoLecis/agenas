@@ -10,23 +10,15 @@ Lo script usa solo pagine pubbliche. Non accede ad aree riservate.
 """
 
 from datetime import datetime
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 
 from utils_paths import get_project_root, get_configured_path, load_project_config, ensure_project_folders
 from utils_io import write_csv_json_pair
+from utils_web import get_public_url, is_http_url, parse_html, should_skip_href, REQUEST_TIMEOUT_SECONDS
 
 
 FILE_EXTENSIONS = [".csv", ".json", ".xml", ".xlsx", ".xls", ".zip", ".pdf"]
-HEADERS = {"User-Agent": "Agenas-data-analysis/0.1"}
-SKIP_SCHEMES = {"mailto", "tel", "javascript", "data"}
-
-
-def is_http_url(url):
-    parsed = urlparse(str(url))
-    return parsed.scheme in {"http", "https"}
 
 
 def is_download_link(url):
@@ -34,11 +26,11 @@ def is_download_link(url):
     return any(clean_url.endswith(extension) for extension in FILE_EXTENSIONS)
 
 
-def fetch_public_page(url, timeout_seconds=30):
+def fetch_public_page(url, timeout_seconds=REQUEST_TIMEOUT_SECONDS):
     if not url or not is_http_url(url):
         return None, "", "", "missing_or_invalid_url"
     try:
-        response = requests.get(url, headers=HEADERS, timeout=timeout_seconds)
+        response = get_public_url(url, timeout_seconds=timeout_seconds)
         return response.status_code, response.headers.get("content-type", ""), response.text, ""
     except Exception as error:
         return None, "", "", str(error)
@@ -64,12 +56,10 @@ def extract_links(source):
             "error_message": error_message,
         })
         return rows
-    soup = BeautifulSoup(html, "lxml")
+    soup = parse_html(html)
     for link in soup.find_all("a"):
         href = link.get("href")
-        if not href:
-            continue
-        if urlparse(href).scheme in SKIP_SCHEMES:
+        if should_skip_href(href):
             continue
         absolute_url = urljoin(source_url, href)
         if not is_http_url(absolute_url):

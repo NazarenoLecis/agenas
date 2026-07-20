@@ -4,36 +4,29 @@ Script: 46_iss_links.py
 Estrae link candidati dalle fonti ISS configurate.
 """
 
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin
 from datetime import datetime
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 
 from utils_paths import get_configured_path, ensure_project_folders, load_project_config
 from utils_io import write_csv_json_pair
+from utils_web import get_public_url, is_http_url, parse_html, should_skip_href, REQUEST_TIMEOUT_SECONDS
 
 
-HEADERS = {"User-Agent": "Agenas-data-analysis/0.1"}
 KEYWORDS = ["dati", "dataset", "csv", "xlsx", "pdf", "rapporto", "sorveglianza"]
-SKIP_SCHEMES = {"mailto", "tel", "javascript", "data"}
-
-
-def is_http_url(url):
-    return urlparse(str(url)).scheme in {"http", "https"}
 
 
 def extract(url):
     if not url or not is_http_url(url):
         return pd.DataFrame([{"url": "", "link_text": "", "error": "missing_or_invalid_url"}])
-    response = requests.get(url, headers=HEADERS, timeout=30)
+    response = get_public_url(url, timeout_seconds=REQUEST_TIMEOUT_SECONDS)
     response.raise_for_status()
-    soup = BeautifulSoup(response.text, "lxml")
+    soup = parse_html(response.text)
     rows = []
     for link in soup.find_all("a"):
         href = link.get("href")
         text = link.get_text(" ", strip=True)
-        if not href or urlparse(href).scheme in SKIP_SCHEMES:
+        if should_skip_href(href):
             continue
         absolute = urljoin(url, href)
         if not is_http_url(absolute):

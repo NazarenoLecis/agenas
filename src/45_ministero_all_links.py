@@ -4,37 +4,30 @@ Script: 45_ministero_all_links.py
 Estrae link e candidati dataset dal portale Open Data del Ministero della Salute.
 """
 
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin
 from datetime import datetime
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 
 from utils_paths import get_configured_path, ensure_project_folders
 from utils_io import write_csv_json_pair
+from utils_web import get_public_url, is_http_url, parse_html, should_skip_href, REQUEST_TIMEOUT_SECONDS
 
 
 URL = "https://www.dati.salute.gov.it/"
-HEADERS = {"User-Agent": "Agenas-data-analysis/0.1"}
 KEYWORDS = ["dataset", "csv", "json", "xml", "download", "scarica", "dati", "open"]
-SKIP_SCHEMES = {"mailto", "tel", "javascript", "data"}
-
-
-def is_http_url(url):
-    return urlparse(str(url)).scheme in {"http", "https"}
 
 
 def main():
     ensure_project_folders()
     rows = []
     try:
-        response = requests.get(URL, headers=HEADERS, timeout=30)
+        response = get_public_url(URL, timeout_seconds=REQUEST_TIMEOUT_SECONDS)
         response.raise_for_status()
-        soup = BeautifulSoup(response.text, "lxml")
+        soup = parse_html(response.text)
         for link in soup.find_all("a"):
             href = link.get("href")
             text = link.get_text(" ", strip=True)
-            if not href or urlparse(href).scheme in SKIP_SCHEMES:
+            if should_skip_href(href):
                 continue
             absolute = urljoin(URL, href)
             if not is_http_url(absolute):

@@ -47,14 +47,19 @@ STEPS = [
 ]
 
 
+def run_step(step):
+    print(f"Running {step}", flush=True)
+    return subprocess.run([sys.executable, step], check=False)
+
+
 def main():
     for step in STEPS:
-        print(f"Running {step}")
-        result = subprocess.run([sys.executable, step], check=False)
+        result = run_step(step)
         if result.returncode != 0:
             print(f"Step failed: {step}")
-            return
+            return result.returncode
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -1,0 +1,110 @@
+[
+  {
+    "module_id":"mobility_flows",
+    "module_name":"Mobilita sanitaria",
+    "coverage":"all_available_data",
+    "expected_granularity":"origine_destinazione_prestazione_disciplina_anno_valore_volume"
+  },
+  {
+    "module_id":"mobility_complexity",
+    "module_name":"Mobilita per complessita",
+    "coverage":"all_available_data",
+    "expected_granularity":"drg_mdc_tipo_ricovero_disciplina_prestazione_valore_volume"
+  },
+  {
+    "module_id":"workforce",
+    "module_name":"Personale sanitario",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_asl_struttura_professione_categoria_anno"
+  },
+  {
+    "module_id":"waiting_times",
+    "module_name":"Tempi di attesa",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_prestazione_classe_priorita_periodo"
+  },
+  {
+    "module_id":"costs",
+    "module_name":"Costi spesa e risultati economici",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_azienda_voce_costo_anno"
+  },
+  {
+    "module_id":"health_expenditure",
+    "module_name":"Spesa sanitaria regionale nominale reale e demografica",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_anno_voce_spesa_base_contabile_importo_popolazione_deflatore"
+  },
+  {
+    "module_id":"demography_denominators",
+    "module_name":"Denominatori demografici",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_anno_eta_sesso_popolazione_nascite"
+  },
+  {
+    "module_id":"price_deflators",
+    "module_name":"Deflatori e prezzi",
+    "coverage":"all_available_data",
+    "expected_granularity":"anno_indice_base_valore"
+  },
+  {
+    "module_id":"services",
+    "module_name":"Prestazioni",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_asl_struttura_prestazione_anno"
+  },
+  {
+    "module_id":"emergency",
+    "module_name":"Emergenza urgenza",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_struttura_triage_esito_periodo"
+  },
+  {
+    "module_id":"hospital_activity",
+    "module_name":"Ricoveri e attivita ospedaliera",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_struttura_drg_disciplina_tipo_ricovero_anno"
+  },
+  {
+    "module_id":"territorial_care",
+    "module_name":"Assistenza territoriale",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_asl_distretto_servizio_anno"
+  },
+  {
+    "module_id":"equipment",
+    "module_name":"Dotazioni e grandi apparecchiature",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_asl_struttura_apparecchiatura_anno"
+  },
+  {
+    "module_id":"structures",
+    "module_name":"Strutture sanitarie",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_asl_struttura_tipo_accreditamento_anno"
+  },
+  {
+    "module_id":"pharmaceutical",
+    "module_name":"Farmaci e assistenza farmaceutica",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_farmaco_classe_spesa_consumo_anno"
+  },
+  {
+    "module_id":"demography",
+    "module_name":"Demografia e denominatori",
+    "coverage":"all_available_data",
+    "expected_granularity":"comune_regione_eta_sesso_anno"
+  },
+  {
+    "module_id":"surveillance",
+    "module_name":"Sorveglianze ISS",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_eta_sesso_periodo_indicatore"
+  },
+  {
+    "module_id":"risk_factors",
+    "module_name":"Fattori di rischio e prevenzione",
+    "coverage":"all_available_data",
+    "expected_granularity":"regione_eta_sesso_indicatore_anno"
+  }
+]

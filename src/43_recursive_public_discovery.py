@@ -9,43 +9,23 @@ aree riservate e non usa credenziali.
 """
 
 from collections import deque
-from urllib.parse import urljoin, urlparse, urldefrag
+from urllib.parse import urljoin, urlparse
 from datetime import datetime
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 
 from utils_paths import get_configured_path, ensure_project_folders, load_project_config
 from utils_io import write_csv_json_pair
+from utils_web import get_public_url, is_http_url, normalize_url, parse_html, should_skip_href, REQUEST_TIMEOUT_SECONDS
 
 
-HEADERS = {"User-Agent": "Agenas-data-analysis/0.1"}
 FILE_EXTENSIONS = [".csv", ".json", ".xml", ".xlsx", ".xls", ".zip", ".pdf", ".ods"]
 KEYWORDS = ["download", "scarica", "dataset", "dati", "csv", "json", "xlsx", "open-data", "open data"]
 MAX_DEPTH = 1
-MAX_PAGES_PER_SOURCE = 25
-SKIP_SCHEMES = {"mailto", "tel", "javascript", "data"}
-
-
-def normalize_url(url):
-    if not isinstance(url, str) or not url:
-        return ""
-    cleaned, _ = urldefrag(url.strip())
-    return cleaned
-
-
-def is_http_url(url):
-    return urlparse(str(url)).scheme in {"http", "https"}
+MAX_PAGES_PER_SOURCE = 5
 
 
 def same_domain(url, base_url):
     return urlparse(url).netloc == urlparse(base_url).netloc
-
-
-def should_skip_href(href):
-    if not href:
-        return True
-    return urlparse(href).scheme in SKIP_SCHEMES
 
 
 def classify_link(url, text):
@@ -59,9 +39,9 @@ def classify_link(url, text):
 
 
 def fetch_links(page_url):
-    response = requests.get(page_url, headers=HEADERS, timeout=30)
+    response = get_public_url(page_url, timeout_seconds=REQUEST_TIMEOUT_SECONDS)
     response.raise_for_status()
-    soup = BeautifulSoup(response.text, "lxml")
+    soup = parse_html(response.text)
     links = []
     for link in soup.find_all("a"):
         href = link.get("href")

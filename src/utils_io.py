@@ -11,6 +11,7 @@ Per gli output pubblici del progetto, CSV e JSON sono i formati obbligatori.
 from pathlib import Path
 import json
 import pandas as pd
+from pandas.errors import EmptyDataError
 
 
 def read_table(path):
@@ -20,7 +21,10 @@ def read_table(path):
     path = Path(path)
     suffix = path.suffix.lower()
     if suffix == ".csv":
-        return pd.read_csv(path)
+        try:
+            return pd.read_csv(path)
+        except EmptyDataError:
+            return pd.DataFrame()
     if suffix == ".json":
         return pd.read_json(path)
     if suffix in [".xlsx", ".xls"]:
